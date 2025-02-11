@@ -3,7 +3,7 @@
              x:Class="SquarePixel.App"
              xmlns:local="using:SquarePixel"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
-             RequestedThemeVariant="Default">
+             RequestedThemeVariant="Light">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
@@ -11,6 +11,6 @@
     </Application.DataTemplates>
   
     <Application.Styles>
-        <suki:SukiTheme />
+        <suki:SukiTheme ThemeColor="Blue"/>
     </Application.Styles>
 </Application>

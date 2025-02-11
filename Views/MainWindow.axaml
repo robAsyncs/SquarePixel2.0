@@ -1,5 +1,4 @@
-<suki:SukiWindow 
-                 xmlns="https://github.com/avaloniaui"
+<suki:SukiWindow xmlns="https://github.com/avaloniaui"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:vm="using:SquarePixel.ViewModels"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,17 +7,24 @@
                  x:Class="SquarePixel.Views.MainWindow"
                  x:DataType="vm:MainWindowViewModel"
                  xmlns:suki="https://github.com/kikipoulet/SukiUI"
-                 BackgroundStyle="GradientSoft"
-                 xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                 BackgroundStyle="GradientDarker"
+                 xmlns:views="clr-namespace:SquarePixel.Views"
                  Icon="/Assets/avalonia-logo.ico"
                  Title="SquarePixel">
 
-    <suki:SukiWindow.MenuItems>
+    
+  <suki:SukiSideMenu>
+      <suki:SukiSideMenu.Items>
+          
+          
+          <suki:SukiSideMenuItem Header="Gallery" Classes="Compact" >
+              <suki:SukiSideMenuItem.PageContent>
+                  <views:ImageCard />
+              </suki:SukiSideMenuItem.PageContent>
+          </suki:SukiSideMenuItem>
         
-            <MenuItem Header="Home">
-                <MenuItem.Icon>
-                    <avalonia:MaterialIcon Kind="Home" />
-                </MenuItem.Icon>
-            </MenuItem>
-        </suki:SukiWindow.MenuItems>
+        
+        
+      </suki:SukiSideMenu.Items>
+  </suki:SukiSideMenu>
 </suki:SukiWindow>

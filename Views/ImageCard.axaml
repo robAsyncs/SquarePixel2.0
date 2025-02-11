@@ -1,0 +1,17 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             x:Class="SquarePixel.Views.ImageCard">
+    
+    
+    
+    <Grid Height="400" Width="400">
+        <suki:GlassCard IsOpaque="False" Classes="Accent" IsInteractive="True" BorderThickness="2" 
+                        BorderBrush="BlueViolet">
+            <Image Source="../Assets/picture.png" />
+        </suki:GlassCard>
+    </Grid>
+</UserControl>
