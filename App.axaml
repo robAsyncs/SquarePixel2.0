@@ -4,8 +4,7 @@
              xmlns:local="using:SquarePixel"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              RequestedThemeVariant="Light">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
+    
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>

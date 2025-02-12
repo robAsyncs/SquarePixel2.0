@@ -12,19 +12,18 @@
                  Icon="/Assets/avalonia-logo.ico"
                  Title="SquarePixel">
 
+    <suki:SukiWindow.Hosts>
+               <suki:SukiDialogHost Manager="{Binding DialogManager}"/>
+           </suki:SukiWindow.Hosts>
+    
     
   <suki:SukiSideMenu>
       <suki:SukiSideMenu.Items>
-          
-          
-          <suki:SukiSideMenuItem Header="Gallery" Classes="Compact" >
+          <suki:SukiSideMenuItem Header="Gallery">
               <suki:SukiSideMenuItem.PageContent>
-                  <views:ImageCard />
+                  <views:ImageGallery DataContext="{Binding GalleryViewModel}"/>
               </suki:SukiSideMenuItem.PageContent>
           </suki:SukiSideMenuItem>
-        
-        
-        
       </suki:SukiSideMenu.Items>
   </suki:SukiSideMenu>
 </suki:SukiWindow>
