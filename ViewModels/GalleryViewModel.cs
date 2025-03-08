@@ -1,33 +1,64 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq.Expressions;
+using System.IO;
+using System.Linq;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Platform.Storage;
+using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using SquarePixel.Models;
-using SukiUI.Controls;
 using SukiUI.Dialogs;
 
 namespace SquarePixel.ViewModels;
 
-public partial class GalleryViewModel(
-    ISukiDialogManager dialogManager) 
+public partial class GalleryViewModel
     : ViewModelBase
 {
     public ObservableCollection<ImageItem> ImageCollection { get; } = [];
-    private ISukiDialogManager _dialogManager { get; } = dialogManager ?? throw new ArgumentNullException(nameof(dialogManager));
+    private ISukiDialogManager _dialogManager;
+  
+    private IObservable<bool> _canSelectFile = Observable.Return(true);
+    [Reactive] private string? _dirName;
 
-
-    [ReactiveCommand]
-    private async Task LoadGalleryFolderAsync()
+    public GalleryViewModel( ISukiDialogManager dialogManager)
     {
-        var path = string.Empty;
-        _dialogManager.CreateDialog()
-            .Dismiss().ByClickingBackground()
-            .WithTitle("Select Image or Folder").TryShow();
+        _dialogManager = dialogManager ?? throw new ArgumentNullException(nameof(dialogManager));
         
+    }
+    
+    
+    [ReactiveCommand(CanExecute = nameof(_canSelectFile))]
+    private async Task LoadGalleryFolder(string? dirName)
+    {
+        ImageCollection.Clear();
+
+        IEnumerable<string> dir;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(dirName))
+                return;
+            
+            dir = new DirectoryInfo(dirName).GetFiles("*.jpg")
+                .Select(x => x.FullName);
+            
+        }
+        catch (Exception ex)
+        {
+            //todo: make dialog manager
+            return;
+        }
         
-        //todo: check if folder, load all item else load image add to ObsColl
+        foreach (var fileInfo in dir)
+          ImageCollection.Add(new ImageItem(fileInfo));
+    }
+
+
+    
+    
+    private async Task LoadImageThumbnailsAsync()
+    {
+        
     }
 }

@@ -1,14 +1,10 @@
-﻿using SukiUI.Dialogs;
+﻿using System;
+using SukiUI.Dialogs;
 
 namespace SquarePixel.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel(GalleryViewModel galleryViewModel, ISukiDialogManager dialogManager) : ViewModelBase
 {
-    public GalleryViewModel GalleryViewModel { get; }
-    public ISukiDialogManager DialogManager { get; } = new SukiDialogManager();
-
-    public MainWindowViewModel()
-    {
-        GalleryViewModel = new GalleryViewModel(DialogManager);
-    }
+    public GalleryViewModel GalleryViewModel { get; } = galleryViewModel ?? throw new ArgumentNullException(nameof(galleryViewModel));
+    public ISukiDialogManager DialogManager { get; } = dialogManager;
 }

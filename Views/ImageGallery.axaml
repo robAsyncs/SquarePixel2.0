@@ -16,20 +16,29 @@
     </UserControl.Resources>
 
     
-    <Grid RowDefinitions="40, Auto" Margin="10">
-        <Button  Background="Orange" Width="250" HorizontalAlignment="Left"
-            Content="Load Images from Folder" Command="{Binding LoadGalleryFolderCommand}"/>
+    <Grid RowDefinitions="100, Auto" Margin="10" MinWidth="200" MinHeight="200" ShowGridLines="False">
+       <StackPanel Orientation="Horizontal" Spacing="30" Height="50">
+                       <Label Content="Enter Directory Name" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                       <TextBox Watermark="C://......" x:Name="dirBox"/>
+                       <Button Content="Load Images" MaxWidth="200" HorizontalAlignment="Left" 
+                               Command="{Binding LoadGalleryFolderCommand}" 
+                               CommandParameter="{Binding #dirBox.Text}" Background="LightGray"/>
+       </StackPanel>
         
-        
-        <WrapPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <ItemsRepeater ItemsSource="{Binding ImageCollection}" >
+        <ScrollViewer Grid.Row="1" >
+            
+            <ItemsRepeater ItemsSource="{Binding ImageCollection}" 
+                           HorizontalAlignment="Center">
+                <ItemsRepeater.Layout>
+                    <WrapLayout HorizontalSpacing="24" VerticalSpacing="10"  />
+                </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate>
                         <suki:GlassCard IsOpaque="True" IsInteractive="True" BorderThickness="2" 
-                                        BorderBrush="Red" MaxWidth="350" MaxHeight="250" Padding="5">
+                                        BorderBrush="Olive" Width="400" Height="400" Padding="5">
                             <Grid RowDefinitions="Auto,*, 50" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <Image Grid.Row="0" Source="{Binding Source, 
-                            Converter={StaticResource ImgConverter}}" Height="100"/>
+                            Converter={StaticResource ImgConverter}}" />
                                 <Label Grid.Row="2" FontWeight="SemiBold" Content="{Binding ImageDescription}" 
                                        FontSize="18" VerticalAlignment="Bottom"/>
                             </Grid>
@@ -37,6 +46,7 @@
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
             </ItemsRepeater>
-        </WrapPanel>
+        </ScrollViewer>
+        
     </Grid>
 </UserControl>

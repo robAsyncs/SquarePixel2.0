@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 using Avalonia.ReactiveUI;
-using ReactiveUI;
+
 namespace SquarePixel;
 
 sealed class Program

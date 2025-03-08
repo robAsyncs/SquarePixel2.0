@@ -22,7 +22,7 @@
           <suki:SukiSideMenuItem Header="Gallery">
               <suki:SukiSideMenuItem.PageContent>
                   <views:ImageGallery DataContext="{Binding GalleryViewModel}"/>
-              </suki:SukiSideMenuItem.PageContent>
+              </suki:SukiSideMenuItem.PageContent>e
           </suki:SukiSideMenuItem>
       </suki:SukiSideMenu.Items>
   </suki:SukiSideMenu>
