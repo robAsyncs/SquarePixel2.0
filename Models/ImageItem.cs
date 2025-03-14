@@ -5,9 +5,10 @@ using Avalonia.Media.Imaging;
 
 namespace SquarePixel.Models;
 
-public class ImageItem(Stream source)
+public class ImageItem(string filePath, Stream source)
 {
-    public Bitmap Source { get; } = new(source);
+    public Bitmap BitmapThumbnail { get; } = new(source);
+    public string ImageSource { get; } = filePath;
     public string? ImageClass { get; set; }
     public string? ImageDescription { get; set; }
 

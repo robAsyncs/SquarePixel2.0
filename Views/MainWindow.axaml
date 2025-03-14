@@ -19,6 +19,7 @@
     
   <suki:SukiSideMenu>
       <suki:SukiSideMenu.Items>
+          <!--Add Icon and setting, will store redis db connection and inference server address there-->
           <suki:SukiSideMenuItem Header="Gallery">
               <suki:SukiSideMenuItem.PageContent>
                   <views:GalleryView DataContext="{Binding GalleryViewModel}"/>

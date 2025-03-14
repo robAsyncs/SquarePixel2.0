@@ -24,8 +24,9 @@ public partial class ImageDbViewModel: ViewModelBase
     private ISukiDialogManager _dialogManager { get; }
     
     //todo: replace with dynamic data coll
-    public ObservableCollection<string> ImageClasses { get; } = ["Planes", "Buildings"];
-    [Reactive] public int _filterByClassValue;
+    public ObservableCollection<string> ImageClasses { get; } = ["--","Planes", "Buildings"];
+    [Reactive] private int _selectedImage;
+    [Reactive] private int _filterByClassValue;
 
     public ImageDbViewModel(ISukiDialogManager dialogManager)
     {
@@ -46,7 +47,7 @@ public partial class ImageDbViewModel: ViewModelBase
 
 
     [ReactiveCommand]
-    private async Task FilterBySelectedClass(int classPosition)
+    private void FilterBySelectedClass(int classPosition)
     {
         
     }
@@ -76,8 +77,17 @@ public partial class ImageDbViewModel: ViewModelBase
         //todo: replace with iasyncenumerable
         await Task.Run(() =>
         {
-            foreach (var fileInfo in dir)
-                ImageCollection.Add(new ImageItem(fileInfo.LoadImageFromPath(width:350)));
+            foreach (var imagePath in dir)
+            {
+                try
+                {
+                    ImageCollection.Add(new ImageItem(imagePath, imagePath.LoadImageFromPath(desiredWidth: 350)));
+                }
+                catch (FileNotFoundException ex)
+                {
+                    _dialogManager.Popup(NotificationType.Error, "File not found", ex.Message);
+                }
+            }
         });
 
     }

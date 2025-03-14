@@ -8,12 +8,15 @@
              x:DataType="vm:GalleryViewModel"
              x:Class="SquarePixel.Views.GalleryView">
      
-    <Grid RowDefinitions="100, *" ColumnDefinitions="*, Auto" Margin="10" MinWidth="200" MinHeight="200" ShowGridLines="False">
+    <Grid RowDefinitions="3*, *" ColumnDefinitions="*, Auto" Margin="10" MinWidth="200" MinHeight="200" ShowGridLines="False">
        
+        <Canvas Background="LightGray" Grid.Row="0" Grid.Column="0" Margin="10">
+            <Image Source="{Binding SelectedBitmap}"
+                   Width="{Binding $parent.Bounds.Width}"
+                   Height="{Binding $parent.Bounds.Height}"/>
+        </Canvas>
         
-        
-        
-        <Expander Grid.Row="0" Grid.RowSpan="2" MinWidth="500"
+        <Expander Grid.Row="0" Grid.RowSpan="2" MinWidth="300"
                   Grid.Column="1" ExpandDirection="Left" IsExpanded="True"
                   Header="Image Gallery" HorizontalContentAlignment="Stretch">
             <views:ImageDbView DataContext="{Binding ImageDbViewModel}"/>
