@@ -21,7 +21,7 @@
       <suki:SukiSideMenu.Items>
           <suki:SukiSideMenuItem Header="Gallery">
               <suki:SukiSideMenuItem.PageContent>
-                  <views:ImageGallery DataContext="{Binding GalleryViewModel}"/>
+                  <views:GalleryView DataContext="{Binding GalleryViewModel}"/>
               </suki:SukiSideMenuItem.PageContent>e
           </suki:SukiSideMenuItem>
       </suki:SukiSideMenu.Items>

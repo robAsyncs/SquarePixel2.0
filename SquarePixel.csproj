@@ -35,6 +35,7 @@
         <PackageReference Include="Splat" Version="15.3.1" />
         <PackageReference Include="Splat.DependencyInjection.SourceGenerator" Version="{latest version}" PrivateAssets="all" />
         <PackageReference Include="SukiUI" Version="6.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="9.0.3" />
     </ItemGroup>
 
     <ItemGroup>

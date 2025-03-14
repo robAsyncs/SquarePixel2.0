@@ -1,0 +1,42 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:viewModels="clr-namespace:SquarePixel.ViewModels"
+
+             x:Class="SquarePixel.Views.ImageDbView"
+             x:DataType="viewModels:ImageDbViewModel">
+  
+    
+    <suki:GlassCard BorderThickness="2" IsInteractive="True" BorderBrush="Black" Width="350">
+       <StackPanel Spacing="10">
+           <StackPanel>
+               <ComboBox BorderThickness="2" BorderBrush="Red" PlaceholderText="Tagged" 
+                         ItemsSource="{Binding ImageClasses}"
+                         SelectedIndex="{Binding FilterByClassValue}"/>
+           </StackPanel>
+           <ScrollViewer>
+               <StackPanel Spacing="15">
+                   <ItemsRepeater ItemsSource="{Binding ImageCollection}" 
+                                  HorizontalAlignment="Center">
+                       <ItemsRepeater.Layout>
+                           <WrapLayout HorizontalSpacing="24" VerticalSpacing="10"  />
+                       </ItemsRepeater.Layout>
+                       <ItemsRepeater.ItemTemplate>
+                           <DataTemplate>
+                               <Grid RowDefinitions="Auto,*, 50" Width="300" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                   <Image Grid.Row="0" Source="{Binding Source}" Stretch="UniformToFill"/>
+                                
+                               </Grid>
+                           
+                           </DataTemplate>
+                       </ItemsRepeater.ItemTemplate>
+                   </ItemsRepeater>
+               </StackPanel>
+           </ScrollViewer>
+       </StackPanel>
+    </suki:GlassCard>
+    
+</UserControl>

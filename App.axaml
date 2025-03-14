@@ -9,6 +9,8 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
   
+    
+    
     <Application.Styles>
         <suki:SukiTheme ThemeColor="Blue"/>
     </Application.Styles>

@@ -31,11 +31,12 @@ public partial class App : Application
     }
 
 
-    public void InitializeDependencies()
+    private void InitializeDependencies()
     
     {  
         SplatRegistrations.RegisterLazySingleton<ISukiDialogManager, SukiDialogManager>();
         SplatRegistrations.RegisterLazySingleton<GalleryViewModel, GalleryViewModel>();
+        SplatRegistrations.RegisterLazySingleton<ImageDbViewModel, ImageDbViewModel>();
         SplatRegistrations.RegisterLazySingleton<MainWindowViewModel, MainWindowViewModel>();
         
       
