@@ -1,5 +1,4 @@
-﻿using Avalonia.Controls;
-using Avalonia.ReactiveUI;
+﻿using Avalonia.ReactiveUI;
 using ReactiveUI;
 using Splat;
 using SquarePixel.ViewModels;

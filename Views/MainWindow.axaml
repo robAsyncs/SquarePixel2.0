@@ -7,15 +7,24 @@
                  x:Class="SquarePixel.Views.MainWindow"
                  x:DataType="vm:MainWindowViewModel"
                  xmlns:suki="https://github.com/kikipoulet/SukiUI"
-                 BackgroundStyle="GradientDarker"
+                 BackgroundStyle="Gradient"
                  xmlns:views="clr-namespace:SquarePixel.Views"
-                 Icon="/Assets/avalonia-logo.ico"
+                 Icon="/Assets/pixel.png"
                  Title="SquarePixel">
+    
+    
+    
+    <!-- Icon attributes
+    <a href="https://www.flaticon.com/free-icons/pixel" title="pixel icons">Pixel icons created by Freepik - Flaticon</a> -->
 
     <suki:SukiWindow.Hosts>
-               <suki:SukiDialogHost Manager="{Binding DialogManager}"/>
-           </suki:SukiWindow.Hosts>
+        <suki:SukiDialogHost Manager="{Binding DialogManager}"/>
+    </suki:SukiWindow.Hosts>
     
+    
+    <suki:SukiWindow.LogoContent>
+        <Image Source="../Assets/pixel.png" Height="20"/>
+    </suki:SukiWindow.LogoContent>
     
   <suki:SukiSideMenu>
       <suki:SukiSideMenu.Items>
@@ -23,6 +32,13 @@
           <suki:SukiSideMenuItem Header="Gallery">
               <suki:SukiSideMenuItem.PageContent>
                   <views:GalleryView DataContext="{Binding GalleryViewModel}"/>
+              </suki:SukiSideMenuItem.PageContent>e
+          </suki:SukiSideMenuItem>
+          
+          
+          <suki:SukiSideMenuItem Header="Setting" Icon="">
+              <suki:SukiSideMenuItem.PageContent>
+                  <views:SettingView DataContext="{Binding SettingViewModel}"/>
               </suki:SukiSideMenuItem.PageContent>e
           </suki:SukiSideMenuItem>
       </suki:SukiSideMenu.Items>

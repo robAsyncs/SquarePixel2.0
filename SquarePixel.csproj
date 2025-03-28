@@ -41,8 +41,4 @@
     <ItemGroup>
       <None Remove=".gitignore" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Interface\" />
-    </ItemGroup>
 </Project>

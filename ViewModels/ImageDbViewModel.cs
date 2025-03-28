@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls.Notifications;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
-using SquarePixel.Extensions;
 using SquarePixel.Models;
 using SquarePixel.Util;
 using SukiUI.Dialogs;
@@ -35,9 +33,12 @@ public partial class ImageDbViewModel: ViewModelBase
         this.WhenActivated(disposable =>
         {
             this.WhenAnyValue(x => x.FilterByClassValue)
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .InvokeCommand(FilterBySelectedClassCommand).DisposeWith(disposable);
             
-            LoadGalleryFolderCommand.Execute(@"C:\\Users\\robel\\Desktop\\OneDrive\\Gallery\\Shared Gallery Folder\\Mk Share")
+            LoadGalleryFolderCommand
+                .Execute(@"C:\\Users\\robel\\Desktop\\OneDrive\\Gallery\\Shared Gallery Folder\\Mk Share")
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe().DisposeWith(disposable);
         });
     }
@@ -56,6 +57,7 @@ public partial class ImageDbViewModel: ViewModelBase
     
     [ReactiveCommand] private async Task LoadGalleryFolder(string? dirName)
     {
+        //throws since on different thread when invoking
         ImageCollection.Clear();
 
         IEnumerable<string> dir;

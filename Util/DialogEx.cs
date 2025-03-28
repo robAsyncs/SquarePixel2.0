@@ -1,7 +1,7 @@
 ﻿using Avalonia.Controls.Notifications;
 using SukiUI.Dialogs;
 
-namespace SquarePixel.Extensions;
+namespace SquarePixel.Util;
 
 public static class DialogEx
 {

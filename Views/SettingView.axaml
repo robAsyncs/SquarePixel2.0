@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:SquarePixel.ViewModels"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:objectModel="clr-namespace:System.Collections.ObjectModel;assembly=System.ObjectModel"
+             x:DataType="vm:SettingViewModel"
+             x:Class="SquarePixel.Views.SettingView">
+    
+    
+    <suki:SettingsLayout>
+        <suki:SettingsLayout.Items>
+            <objectModel:ObservableCollection x:TypeArguments="suki:SettingsLayoutItem">
+                <suki:SettingsLayoutItem Header="Image Database">
+                    <suki:SettingsLayoutItem.Content>
+                       <StackPanel>
+                           <Label Content="test"/>
+                       </StackPanel>
+                    </suki:SettingsLayoutItem.Content>
+                </suki:SettingsLayoutItem>
+
+                
+            </objectModel:ObservableCollection>
+        </suki:SettingsLayout.Items>
+    </suki:SettingsLayout>
+    
+    
+</UserControl>

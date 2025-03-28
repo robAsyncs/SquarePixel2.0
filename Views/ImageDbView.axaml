@@ -5,19 +5,18 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:viewModels="clr-namespace:SquarePixel.ViewModels"
-
              x:Class="SquarePixel.Views.ImageDbView"
              x:DataType="viewModels:ImageDbViewModel">
   
     
     <suki:GlassCard BorderThickness="2" IsInteractive="True" BorderBrush="Black" Width="350">
-      
            <DockPanel>
                <ComboBox DockPanel.Dock="Top" BorderThickness="2" BorderBrush="Red" PlaceholderText="Tagged" 
                          ItemsSource="{Binding ImageClasses}"
                          SelectedIndex="{Binding FilterByClassValue}"/>
                     <ScrollViewer DockPanel.Dock="Bottom" >
-                       <ListBox VerticalAlignment="Center" SelectionMode="Single" SelectedIndex="{Binding SelectedImage}" 
+                       <ListBox VerticalAlignment="Center" SelectionMode="Single" 
+                                SelectedIndex="{Binding SelectedImage}" 
                                 ItemsSource="{Binding ImageCollection}" 
                                       HorizontalAlignment="Center">
                            <ListBox.ItemTemplate>

@@ -1,20 +1,12 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using Avalonia.Media.Imaging;
 using Bitmap = System.Drawing.Bitmap;
 
 namespace SquarePixel.Util;
 
 public static class Extensions
 {
-/// <summary>
-/// Load image as Stream from a source
-/// </summary>
-/// <param name="path">Path to image</param>
-/// <param name="desiredWidth">Scale width of image whilst maintaining aspect ratio, leave empty if no scaling needed</param>
-/// <returns></returns>
-/// <exception cref="FileNotFoundException">File not found</exception>
     public static Stream LoadImageFromPath(this string path, int desiredWidth = -1)
     {
 #pragma warning disable CA1416
@@ -30,6 +22,8 @@ public static class Extensions
         var thumbnailBitmap = desiredWidth != -1 ? 
             new Bitmap(image, new Size(desiredWidth, (int)(desiredWidth / aspectRatio))) : new Bitmap(image);
         
+        //TODO: LOAD DIRECTLY FROM FILE STREAM
+        
         thumbnailBitmap.Save(memory, ImageFormat.Png);
         memory.Position = 0;
         image.Dispose();
@@ -38,4 +32,19 @@ public static class Extensions
 
         return memory;
     }
+
+    public static Color GenerateAmbientColor(string imagePath)
+    {
+        return Color.Orange;
+    }
+
+    public static Stream AsStream(this Bitmap image)
+    {
+        var mem = new MemoryStream();
+        image.Save(mem, ImageFormat.Bmp);
+        mem.Seek(0, SeekOrigin.Begin);
+        image.Dispose();
+        return mem;
+    }
+    
 }

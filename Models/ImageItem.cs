@@ -1,22 +1,19 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace SquarePixel.Models;
 
-public class ImageItem(string filePath, Stream source)
+public class ImageItem(string filePath, Stream source): IDisposable
 {
+    public void Dispose()
+    {
+        source.Dispose();
+        BitmapThumbnail.Dispose();
+    }
+
     public Bitmap BitmapThumbnail { get; } = new(source);
     public string ImageSource { get; } = filePath;
-    public string? ImageClass { get; set; }
-    public string? ImageDescription { get; set; }
 
-    
-
-    private async Task<string> GetBorderColorAsync()
-    {
-        throw new NotImplementedException();
-
-    }
+    public MetaData MetaData { get; set; } = new();
 }
