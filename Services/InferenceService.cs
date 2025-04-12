@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.IO.Pipes;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,4 +46,15 @@ public class InferenceService: IInferenceService
         return JsonSerializer.Deserialize<InferenceResponse>(prediction);
     }
 
+
+
+
+
+    /// <summary>
+    /// Streams Conversation with LLM
+    /// </summary>
+    public async Task ChatBotConversationAsync()
+    {
+        
+    }
 }

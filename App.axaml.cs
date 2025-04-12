@@ -2,14 +2,11 @@ using Akavache;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using ReactiveUI;
 using SquarePixel.ViewModels;
 using SquarePixel.Views;
 using Splat;
-using SquarePixel.Interface;
 using SquarePixel.Models;
 using SquarePixel.Services;
-using SquarePixel.Views.Contorls;
 using SukiUI.Dialogs;
 
 namespace SquarePixel;
@@ -44,11 +41,11 @@ public partial class App : Application
       
         SplatRegistrations.RegisterLazySingleton<ISukiDialogManager, SukiDialogManager>();
         SplatRegistrations.RegisterLazySingleton<GalleryViewModel, GalleryViewModel>();
+        SplatRegistrations.RegisterLazySingleton<LlmViewModel, LlmViewModel>();
         SplatRegistrations.RegisterLazySingleton<ImageDbViewModel, ImageDbViewModel>();
         SplatRegistrations.RegisterLazySingleton<MainWindowViewModel, MainWindowViewModel>();
         SplatRegistrations.RegisterLazySingleton<SettingViewModel, SettingViewModel>();
         SplatRegistrations.RegisterLazySingleton<InferenceService, InferenceService>();
-        SplatRegistrations.RegisterLazySingleton<LLMViewModel, LLMViewModel>();
         SplatRegistrations.RegisterLazySingleton<SettingService<Setting>, SettingService<Setting>>();
 
 

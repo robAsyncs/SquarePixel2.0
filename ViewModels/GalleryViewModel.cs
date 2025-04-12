@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
@@ -15,7 +14,7 @@ namespace SquarePixel.ViewModels;
 public partial class GalleryViewModel : ViewModelBase
 {
     public ImageDbViewModel ImageDbViewModel { get; }
-    public LLMViewModel LlmViewModel { get; }
+    public LlmViewModel LlmViewModel { get; }
 
     [Reactive] private ImageItem? _selectedImage;
 
@@ -23,7 +22,7 @@ public partial class GalleryViewModel : ViewModelBase
     private InferenceService _inferenceService;
 
     public GalleryViewModel(ImageDbViewModel imageDbViewModel, 
-        LLMViewModel llmViewModel,
+        LlmViewModel llmViewModel,
         InferenceService inferenceService)
     {
         ImageDbViewModel = imageDbViewModel ?? throw new ArgumentNullException(nameof(imageDbViewModel));

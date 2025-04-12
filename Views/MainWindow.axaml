@@ -9,6 +9,7 @@
                  xmlns:suki="https://github.com/kikipoulet/SukiUI"
                  BackgroundStyle="Gradient"
                  xmlns:views="clr-namespace:SquarePixel.Views"
+
                  Icon="/Assets/pixel.png"
                  Title="SquarePixel">
     
@@ -35,17 +36,17 @@
               </suki:SukiSideMenuItem.PageContent>
           </suki:SukiSideMenuItem>
           
-          <suki:SukiSideMenuItem Header="Gallery">
+          <suki:SukiSideMenuItem Header="SquareChat">
               <suki:SukiSideMenuItem.PageContent>
-                  <views:GalleryView DataContext="{Binding LlmViewModel}"/>
-              </suki:SukiSideMenuItem.PageContent>e
+                  <views:LlmView DataContext="{Binding LlmViewModel}"/>
+              </suki:SukiSideMenuItem.PageContent>
           </suki:SukiSideMenuItem>
           
           
           <suki:SukiSideMenuItem Header="Setting" Icon="">
               <suki:SukiSideMenuItem.PageContent>
                   <views:SettingView DataContext="{Binding SettingViewModel}"/>
-              </suki:SukiSideMenuItem.PageContent>e
+              </suki:SukiSideMenuItem.PageContent>
           </suki:SukiSideMenuItem>
       </suki:SukiSideMenu.Items>
   </suki:SukiSideMenu>

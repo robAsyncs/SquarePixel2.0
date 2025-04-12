@@ -1,0 +1,58 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converter="clr-namespace:SquarePixel.Converters"
+             mc:Ignorable="d" d:DesignWidth="570" d:DesignHeight="650"
+             x:Class="SquarePixel.Views.LlmView"
+             xmlns:viewModels="clr-namespace:SquarePixel.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:DataType="viewModels:LlmViewModel">
+
+    <UserControl.Resources>
+        <converter:ChatHorizontalAlignmentConverter x:Key="AlignmentConverter" />
+        <converter:ChatColorConverter x:Key="ColorConverter" />
+    </UserControl.Resources>
+    <Grid x:Name="Grid" Background="LightGray">
+        <ScrollViewer MaxHeight="{Binding #Grid.Bounds.Height}">
+            <ListBox VerticalAlignment="Top" IsHitTestVisible="False"
+                     ItemsSource="{Binding ConversationHistory}"
+                     HorizontalAlignment="Center"> 
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="#12100E" 
+                                HorizontalAlignment="{Binding Source, 
+                                Converter={StaticResource AlignmentConverter}}"
+                                MaxWidth="400"
+                                BorderBrush="{Binding Source, 
+                                Converter={StaticResource ColorConverter}}"
+                                BorderThickness="4"
+                                CornerRadius="15"
+                                Padding="10" Margin="10">
+                            <Label Content="{Binding Content}"
+                                   Foreground="#F2F6E8"
+                                   FontSize="18" FontWeight="Medium"/>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+
+
+        <Grid VerticalAlignment="Bottom" ColumnDefinitions="80, 5*">
+            <Button Grid.Column="0" Command="{Binding ClearConversationCommand}">
+                <avalonia:MaterialIcon Foreground="Black" Kind="Pencil" FontWeight="Bold"/>
+            </Button>
+            
+            <Panel HorizontalAlignment="Stretch" Grid.Column="1">
+                <TextBox Text="{Binding UserPrompt}"
+                         Watermark="Enter Prompt Here" KeyDown="PromptModel" 
+                         VerticalAlignment="Bottom" Height="60" HorizontalAlignment="Stretch" />
+                <Button Background="Orange" Command="{Binding AskModelCommand}"
+                         VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="10">
+                    <avalonia:MaterialIcon Foreground="Black" Kind="Send" FontWeight="Bold"/>
+                </Button>
+            </Panel>
+        </Grid>
+    </Grid>
+</UserControl>

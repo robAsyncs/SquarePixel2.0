@@ -3,8 +3,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Akavache;
-using SquarePixel.Interface;
-using SquarePixel.Models;
 
 namespace SquarePixel.Services;
 
