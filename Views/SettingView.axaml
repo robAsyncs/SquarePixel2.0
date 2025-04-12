@@ -6,6 +6,7 @@
              xmlns:vm="using:SquarePixel.ViewModels"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:objectModel="clr-namespace:System.Collections.ObjectModel;assembly=System.ObjectModel"
+             xmlns:squarePixel="clr-namespace:SquarePixel"
              x:DataType="vm:SettingViewModel"
              x:Class="SquarePixel.Views.SettingView">
     
@@ -15,9 +16,10 @@
             <objectModel:ObservableCollection x:TypeArguments="suki:SettingsLayoutItem">
                 <suki:SettingsLayoutItem Header="Image Database">
                     <suki:SettingsLayoutItem.Content>
-                       <StackPanel>
-                           <Label Content="test"/>
-                       </StackPanel>
+                        
+                        <!-- add custom controls with setting items  -->
+                        
+                        
                     </suki:SettingsLayoutItem.Content>
                 </suki:SettingsLayoutItem>
 

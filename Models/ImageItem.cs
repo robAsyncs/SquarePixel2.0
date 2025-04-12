@@ -14,6 +14,5 @@ public class ImageItem(string filePath, Stream source): IDisposable
 
     public Bitmap BitmapThumbnail { get; } = new(source);
     public string ImageSource { get; } = filePath;
-
     public MetaData MetaData { get; set; } = new();
 }

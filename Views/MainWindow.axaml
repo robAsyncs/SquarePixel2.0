@@ -32,6 +32,12 @@
           <suki:SukiSideMenuItem Header="Gallery">
               <suki:SukiSideMenuItem.PageContent>
                   <views:GalleryView DataContext="{Binding GalleryViewModel}"/>
+              </suki:SukiSideMenuItem.PageContent>
+          </suki:SukiSideMenuItem>
+          
+          <suki:SukiSideMenuItem Header="Gallery">
+              <suki:SukiSideMenuItem.PageContent>
+                  <views:GalleryView DataContext="{Binding LlmViewModel}"/>
               </suki:SukiSideMenuItem.PageContent>e
           </suki:SukiSideMenuItem>
           

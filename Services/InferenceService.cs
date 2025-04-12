@@ -14,17 +14,15 @@ namespace SquarePixel.Services;
 
 public class InferenceService: IInferenceService
 {
-    private ISettingService<Setting> _settingService;
+    private SettingService<Setting> _settingService;
     
-    public InferenceService()
+    public InferenceService(SettingService<Setting> settingService)
     {
-      
+        _settingService = settingService ?? throw new ArgumentNullException(nameof(settingService));
     }
     
-    public async Task<ModelPrediction?> PredictImageTag(MemoryStream image, CancellationToken ct)
+    public async Task<InferenceResponse?> GenerateImageCaption(MemoryStream image, CancellationToken ct)
     {
-      
-        
         var prediction = string.Empty;
         using var client = new HttpClient();
 
@@ -37,27 +35,17 @@ public class InferenceService: IInferenceService
         
         try
         {
-           
             var response = await client.PostAsync(settingInfer, content, ct);
             response.EnsureSuccessStatusCode();
             prediction = await response.Content.ReadAsStringAsync(ct);
         }
-        catch (Exception ex)
+        catch (Exception )
         {
              //narrow down exception
+             return null;
         }
         
-        return JsonSerializer.Deserialize<ModelPrediction>(prediction);
+        return JsonSerializer.Deserialize<InferenceResponse>(prediction);
     }
 
-    public class ModelPrediction
-    {
-        public string? Caption { get; set; }
-    }
-    
-    public async Task<string> GenerateImageCaption(CancellationToken ct)
-    {
-        return string.Empty;
-    }
-    
 }

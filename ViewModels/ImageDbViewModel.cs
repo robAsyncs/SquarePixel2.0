@@ -5,11 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.Notifications;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using SquarePixel.Models;
+using SquarePixel.Services;
 using SquarePixel.Util;
 using SukiUI.Dialogs;
 
@@ -25,10 +27,16 @@ public partial class ImageDbViewModel: ViewModelBase
     public ObservableCollection<string> ImageClasses { get; } = ["--","Planes", "Buildings"];
     [Reactive] private int _selectedImage;
     [Reactive] private int _filterByClassValue;
-
-    public ImageDbViewModel(ISukiDialogManager dialogManager)
+    private SettingService<Setting> _settingService;
+    private InferenceService _inferenceService;
+    public ImageDbViewModel(
+        ISukiDialogManager dialogManager, 
+        SettingService<Setting> settingService,
+        InferenceService inferenceService)
     {
         _dialogManager = dialogManager ?? throw new ArgumentNullException(nameof(dialogManager));
+        _settingService = settingService ?? throw new ArgumentNullException(nameof(settingService));
+        _inferenceService = inferenceService ?? throw new ArgumentNullException(nameof(inferenceService));
         
         this.WhenActivated(disposable =>
         {
@@ -36,17 +44,18 @@ public partial class ImageDbViewModel: ViewModelBase
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .InvokeCommand(FilterBySelectedClassCommand).DisposeWith(disposable);
             
+            //todo: reaplce with setting directory
             LoadGalleryFolderCommand
                 .Execute(@"C:\\Users\\robel\\Desktop\\OneDrive\\Gallery\\Shared Gallery Folder\\Mk Share")
                 .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe().DisposeWith(disposable);
+                .Subscribe()
+                .DisposeWith(disposable);
+
+            LoadGalleryFolderCommand.ThrownExceptions.Subscribe();
         });
     }
-
-
     
-
-
+    
     [ReactiveCommand]
     private void FilterBySelectedClass(int classPosition)
     {
@@ -55,9 +64,9 @@ public partial class ImageDbViewModel: ViewModelBase
     
     
     
-    [ReactiveCommand] private async Task LoadGalleryFolder(string? dirName)
+    [ReactiveCommand] private async Task LoadGalleryFolder(string? dirName, CancellationToken ct)
     {
-        //throws since on different thread when invoking
+      
         ImageCollection.Clear();
 
         IEnumerable<string> dir;
@@ -77,20 +86,32 @@ public partial class ImageDbViewModel: ViewModelBase
         }
 
         //todo: replace with iasyncenumerable
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
             foreach (var imagePath in dir)
             {
                 try
                 {
-                    ImageCollection.Add(new ImageItem(imagePath, imagePath.LoadImageFromPath(desiredWidth: 350)));
+                    using var imageStream = imagePath.LoadImageFromPath(desiredWidth: 350);
+
+                    var caption = await _inferenceService.GenerateImageCaption(imageStream, ct);
+                    
+                    ImageCollection.Add(new ImageItem(imagePath, imageStream)
+                    {
+                        MetaData = new MetaData
+                        {
+                            ImageClass = null,
+                            ImageDescription = caption?.Caption,
+                            AmbientColor = default
+                        }
+                    });
                 }
                 catch (FileNotFoundException ex)
                 {
                     _dialogManager.Popup(NotificationType.Error, "File not found", ex.Message);
                 }
             }
-        });
+        }, ct);
 
     }
 }

@@ -3,36 +3,33 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:SquarePixel.Views"
+             xmlns:components="clr-namespace:SquarePixel.Views.Contorls"
              mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
              xmlns:vm="clr-namespace:SquarePixel.ViewModels"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              x:DataType="vm:GalleryViewModel"
              x:Class="SquarePixel.Views.GalleryView">
      
-    <Grid RowDefinitions="3*, *" ColumnDefinitions="*, Auto" Margin="10" MinWidth="200" MinHeight="200" ShowGridLines="False">
+    <Grid RowDefinitions="3*, *" ColumnDefinitions="*, Auto" Margin="10" MinWidth="200" MinHeight="200" 
+          ShowGridLines="False">
        
         <suki:BusyArea BorderBrush="Red" Grid.Row="0" Grid.Column="0" BusyText="Loading"
                        IsBusy="{Binding IsLoadingImage}">
             
                    
                <Panel Background="LightGray" >
-                   <Image Source="{Binding SelectedBitmap.BitmapThumbnail}" 
+                   <Image Source="{Binding SelectedImage.BitmapThumbnail}" 
                           VerticalAlignment="Center"
                           HorizontalAlignment="Center" 
                           Width="{Binding $parent.Bounds.Width}"
                           Height="{Binding $parent.Bounds.Height}"/>
                    
-                   <Label  Content="{Binding SelectedBitmap.MetaData.ImageDescription,
-                        FallbackValue='Hmmm...'}" Background="OrangeRed" Foreground="White" 
+                   <Label  Content="{Binding SelectedImage.MetaData.ImageDescription,
+                        FallbackValue='Hmm, a blank canvas maybe :)'}" Background="#4A4B2F" Foreground="White" 
                           VerticalAlignment="Bottom"
                           HorizontalContentAlignment="Center"
                           FontSize="16" />
                </Panel>
-            
-            
-                      
-            
-            
         </suki:BusyArea>
         
         <Expander Grid.Row="0" Grid.RowSpan="2" MinWidth="300"

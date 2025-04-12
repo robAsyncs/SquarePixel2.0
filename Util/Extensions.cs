@@ -7,7 +7,7 @@ namespace SquarePixel.Util;
 
 public static class Extensions
 {
-    public static Stream LoadImageFromPath(this string path, int desiredWidth = -1)
+    public static MemoryStream LoadImageFromPath(this string path, int desiredWidth = -1)
     {
 #pragma warning disable CA1416
 
@@ -27,6 +27,7 @@ public static class Extensions
         thumbnailBitmap.Save(memory, ImageFormat.Png);
         memory.Position = 0;
         image.Dispose();
+        thumbnailBitmap.Dispose();
         
 #pragma warning restore CA1416
 
