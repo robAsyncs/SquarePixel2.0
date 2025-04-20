@@ -4,7 +4,7 @@ using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace SquarePixel.Models;
 
-public class ImageItem(string filePath, Stream source): IDisposable
+public class ImageItem(Stream source, MetaData data): IDisposable
 {
     public void Dispose()
     {
@@ -13,6 +13,5 @@ public class ImageItem(string filePath, Stream source): IDisposable
     }
 
     public Bitmap BitmapThumbnail { get; } = new(source);
-    public string ImageSource { get; } = filePath;
-    public MetaData MetaData { get; set; } = new();
+    public MetaData MetaData { get; } = data;
 }

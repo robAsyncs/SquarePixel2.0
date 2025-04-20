@@ -13,10 +13,10 @@ public partial class SettingViewModel: ViewModelBase
 {
     [Reactive] private string _imageDir;
     [Reactive] private string _inferenceServerAddress;
-    private SettingService<Setting> _settingService;
+    private SettingService<SquareSetting> _settingService;
 
 
-    public SettingViewModel(SettingService<Setting> settingService)
+    public SettingViewModel(SettingService<SquareSetting> settingService)
     {
         _settingService = settingService;
         
@@ -28,7 +28,7 @@ public partial class SettingViewModel: ViewModelBase
     
     [ReactiveCommand] private async Task LoadSettingsAsync(CancellationToken ct)
     {
-        var setting = await _settingService.GetSettingAsync(ct);
+        var setting = await _settingService.GetAsync<SquareSetting>(ct);
         ImageDir = setting.ImageDataBasePath;
         InferenceServerAddress = setting.InferenceServer;
         
@@ -38,13 +38,13 @@ public partial class SettingViewModel: ViewModelBase
 
     [ReactiveCommand] private async Task SaveSettingsAsync(CancellationToken ct)
     {
-        var newSetting = new Setting
+        var newSetting = new SquareSetting
         {
             ImageDataBasePath = ImageDir,
             InferenceServer = InferenceServerAddress,
             MaxImageWidth = 350
         };
 
-        await _settingService.SaveSettingAsync(newSetting, ct);
+        await _settingService.SaveSettingAsync(newSetting);
     }
 }

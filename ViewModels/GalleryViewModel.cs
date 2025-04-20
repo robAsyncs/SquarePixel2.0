@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
@@ -29,7 +30,6 @@ public partial class GalleryViewModel : ViewModelBase
         _inferenceService = inferenceService ?? throw new ArgumentNullException(nameof(inferenceService));
         LlmViewModel = llmViewModel ?? throw new ArgumentNullException(nameof(llmViewModel));
         
-        
         ImageDbViewModel.WhenAnyValue(x => x.SelectedImage)
             .Skip(1)
             .Where(int.IsPositive)
@@ -37,7 +37,6 @@ public partial class GalleryViewModel : ViewModelBase
         
         this.WhenActivated(disposable =>
         {
-            
             LoadHighResImageCommand.IsExecuting
                 .Subscribe(loading => IsLoadingImage = loading)
                 .DisposeWith(disposable);
@@ -49,15 +48,12 @@ public partial class GalleryViewModel : ViewModelBase
     private async Task LoadHighResImageAsync(int idx, CancellationToken ct)
     {
         SelectedImage?.Dispose();
-        var selected = ImageDbViewModel.ImageCollection[idx];
+        var selected = ImageDbViewModel.FilteredImages[idx];
         
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
-            SelectedImage = new ImageItem(selected.ImageSource,
-                selected.ImageSource.LoadImageFromPath(1300))
-            {
-                MetaData = selected.MetaData
-            };
+            var image = await selected.MetaData.FilePath.LoadImageFromPath(1300);
+            SelectedImage = new ImageItem(image, selected.MetaData);
         }, ct);
     }
 }

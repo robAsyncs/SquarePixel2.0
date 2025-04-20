@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using ReactiveUI.SourceGenerators;
 using SquarePixel.Models.AI;
@@ -13,15 +14,15 @@ public partial class LlmViewModel(InferenceService inferenceService) : ViewModel
 
     [Reactive] private string? _userPrompt;
     public ObservableCollection<Conversation> ConversationHistory { get; } = [IntroConversation];
-
+    
     [ReactiveCommand] private async Task AskModelAsync()
     {
         if (string.IsNullOrWhiteSpace(UserPrompt)) return;
         ConversationHistory.Add(new Conversation(MessageSource.User, UserPrompt));
-        UserPrompt = string.Empty;
-
         
-        await inferenceService.ChatBotConversationAsync();
+        //inject model context if necessary
+        await inferenceService.ChatBotConversationAsync(UserPrompt, string.Empty);
+        UserPrompt = string.Empty;
     }
 
     [ReactiveCommand]

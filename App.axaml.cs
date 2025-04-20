@@ -46,7 +46,7 @@ public partial class App : Application
         SplatRegistrations.RegisterLazySingleton<MainWindowViewModel, MainWindowViewModel>();
         SplatRegistrations.RegisterLazySingleton<SettingViewModel, SettingViewModel>();
         SplatRegistrations.RegisterLazySingleton<InferenceService, InferenceService>();
-        SplatRegistrations.RegisterLazySingleton<SettingService<Setting>, SettingService<Setting>>();
+        SplatRegistrations.RegisterLazySingleton<SettingService<SquareSetting>, SettingService<SquareSetting>>();
 
 
     }

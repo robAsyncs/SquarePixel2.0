@@ -1,13 +1,22 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using DynamicData;
+using DynamicData.Kernel;
+using SquarePixel.Models;
+using SquarePixel.Models.AI;
 using Bitmap = System.Drawing.Bitmap;
 
 namespace SquarePixel.Util;
 
 public static class Extensions
 {
-    public static MemoryStream LoadImageFromPath(this string path, int desiredWidth = -1)
+    public static async Task<MemoryStream> LoadImageFromPath(this string path, int desiredWidth = -1)
     {
 #pragma warning disable CA1416
 
@@ -34,9 +43,9 @@ public static class Extensions
         return memory;
     }
 
-    public static Color GenerateAmbientColor(string imagePath)
+    public static async Task<Color> GenerateAmbientColor(MemoryStream stream, CancellationToken ct)
     {
-        return Color.Orange;
+        return Color.Transparent;
     }
 
     public static Stream AsStream(this Bitmap image)
@@ -46,6 +55,28 @@ public static class Extensions
         mem.Seek(0, SeekOrigin.Begin);
         image.Dispose();
         return mem;
+    }
+
+    private static string[][] Tags = [["Car", "Plane", "Jet"], ["Space", "Sky"], 
+        ["Computer", "Phone"], ["Ring", "People"], ["Ring", "People"]];
+    public static async Task<string[]?> TryLoadTagsFromDisk(this string filePath)
+    {
+        var tags = Tags[Random.Shared.NextInt64(0, Tags.Length - 1)].ToList();
+        return tags.Append("All").ToArray();
+    }
+    
+    public static string[] GenerateRandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var random = new Random();
+        return ["All",
+            new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray()), 
+            new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray()),
+            new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray())
+        ];
     }
     
 }
