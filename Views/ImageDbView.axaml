@@ -5,6 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:suki="https://github.com/kikipoulet/SukiUI"
              xmlns:viewModels="clr-namespace:SquarePixel.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="SquarePixel.Views.ImageDbView"
              x:DataType="viewModels:ImageDbViewModel">
   
@@ -27,6 +28,14 @@
                            </ListBox.ItemTemplate>
                        </ListBox>
                     </ScrollViewer>
+               
+              
+               <Button Background="OrangeRed" Height="50" VerticalAlignment="Bottom" Command="{Binding PickFileCommand}">
+                  <StackPanel Orientation="Horizontal" Spacing="20">
+                      <avalonia:MaterialIcon Kind="Upload"/>
+                      <Label Content="Upload"/>
+                  </StackPanel>
+               </Button>
            </DockPanel>
       
     </suki:GlassCard>

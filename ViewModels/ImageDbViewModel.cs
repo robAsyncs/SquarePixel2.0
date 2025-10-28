@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Platform.Storage;
 using DynamicData;
 using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 using SquarePixel.Models;
+using SquarePixel.Models.Entities;
 using SquarePixel.Services;
 using SquarePixel.Util;
 using SukiUI.Dialogs;
@@ -26,32 +30,38 @@ public partial class ImageDbViewModel : ViewModelBase
     private readonly ReadOnlyObservableCollection<ImageItem> _filteredImages;
     private ISukiDialogManager _dialogManager { get; }
     public ObservableCollection<string> ImageClasses { get; } = ["All"];
+    public IReadOnlyList<IStorageFile> Paths { get; set; }
+
+    public Interaction<Unit, IReadOnlyList<IStorageFile>> PickFileInteraction { get; } = new();
+
     [Reactive] private int _selectedImage;
     [Reactive] private int _filterByClassValue;
     private SettingService<SquareSetting> _settingService;
-    private InferenceService _inferenceService;
+    private DbService _dbService;
+    private RabbitMqService _rabbitMqService;
 
     public ImageDbViewModel(
         ISukiDialogManager dialogManager,
         SettingService<SquareSetting> settingService,
-        InferenceService inferenceService)
+        RabbitMqService rabbitMqService,
+        DbService dbService)
     {
+        _rabbitMqService = rabbitMqService ?? throw new ArgumentNullException(nameof(rabbitMqService));
         _dialogManager = dialogManager ?? throw new ArgumentNullException(nameof(dialogManager));
         _settingService = settingService ?? throw new ArgumentNullException(nameof(settingService));
-        _inferenceService = inferenceService ?? throw new ArgumentNullException(nameof(inferenceService));
+        _dbService = dbService ?? throw new ArgumentNullException(nameof(dbService));
 
         ImageCollection.Connect()
             .AutoRefreshOnObservable(x =>
                 this.WhenAnyValue(x => x.FilterByClassValue))
-            .Filter(x => x.MetaData.Tags.Contains(ImageClasses[FilterByClassValue]))
+            .Filter(x => x.Photo.Tags.Contains(ImageClasses[FilterByClassValue]))
             .Bind(out _filteredImages)
             .Subscribe();
 
         this.WhenActivated(disposable =>
         {
-            //todo: reaplce with setting directory
+            //todo: REPLACE with setting directory
             LoadGalleryFolderCommand
-                .Execute(@"C:\\Users\\robel\\Desktop\\OneDrive\\Gallery\\Shared Gallery Folder\\Mk Share")
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .Subscribe()
                 .DisposeWith(disposable);
@@ -61,59 +71,46 @@ public partial class ImageDbViewModel : ViewModelBase
     }
 
     [ReactiveCommand]
-    private async Task LoadGalleryFolder(string? dirName, CancellationToken ct)
+    private async Task LoadGalleryFolder(CancellationToken ct)
     {
         ImageCollection.Clear();
-        IEnumerable<string> dir;
-        try
-        {
-            if (string.IsNullOrWhiteSpace(dirName))
-                return;
-
-            dir = new DirectoryInfo(dirName).GetFiles("*.jpg")
-                .Select(x => x.FullName);
-
-        }
-        catch (Exception ex)
-        {
-            _dialogManager.Popup(NotificationType.Error, "Operation Failed", ex.Message);
-            return;
-        }
-
+        
         await Task.Run(async () =>
         {
-            await foreach (var item in GenerateImageItemsAsync(dir, ct))
+            await foreach (var item in LoadImagesAsync(ct))
                 ImageCollection.Add(item);
         }, ct);
 
     }
 
-    private async IAsyncEnumerable<ImageItem> GenerateImageItemsAsync(
-        IEnumerable<string> dir, 
-        [EnumeratorCancellation] CancellationToken ct)
+    private async IAsyncEnumerable<ImageItem> LoadImagesAsync([EnumeratorCancellation] CancellationToken ct)
     {
-        foreach (var imagePath in dir)
+        var images = await _dbService.RetrieveImagesAsync();
+        foreach (var image in images)
         {
-            var imageStream = await imagePath.LoadImageFromPath(desiredWidth: 350);
-            var imageClassifications = await imagePath.TryLoadTagsFromDisk() ??
-                                       await _inferenceService.GenerateImageTags(imageStream, imagePath, ct);
-            foreach (var className in imageClassifications)
+            //Load images from disk and captions from db, then 
+            var imageStream = await image.FilePath.LoadImageFromPath(desiredWidth: 350);
+            
+            foreach (var className in image.Tags)
                 if (!ImageClasses.Contains(className)) 
                     ImageClasses.Add(className);
-
-            var caption = await _inferenceService.GenerateImageCaption(imageStream, ct);
-            var ambiance = await Extensions.GenerateAmbientColor(imageStream, ct);
-
-            yield return new ImageItem(imageStream,
-                new MetaData
-                {
-                    FilePath = imagePath,
-                    Tags = imageClassifications,
-                    ImageDescription = caption?.Caption,
-                    AmbientColor = ambiance
-                });
-
+            
+            yield return new ImageItem(imageStream, image);
             await imageStream.DisposeAsync();
         }
+    }
+    
+    [ReactiveCommand] private async Task PickFileAsync(CancellationToken ct)
+    {
+        var photos = (await PickFileInteraction.Handle(Unit.Default))
+            .Select(x => new Photo
+        {
+            Id = new Guid(),
+            FilePath = x.Path.AbsoluteUri,
+            UploadedAt = DateTime.Now,
+        }).ToArray();
+            
+        await _dbService.SaveImageMetaAsync(photos, ct);
+        await _rabbitMqService.PublishImageAsync(photos, ct);
     }
 }

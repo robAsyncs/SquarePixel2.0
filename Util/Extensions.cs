@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DynamicData;
-using DynamicData.Kernel;
-using SquarePixel.Models;
-using SquarePixel.Models.AI;
 using Bitmap = System.Drawing.Bitmap;
 
 namespace SquarePixel.Util;

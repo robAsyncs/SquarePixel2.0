@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
@@ -20,14 +19,14 @@ public partial class GalleryViewModel : ViewModelBase
     [Reactive] private ImageItem? _selectedImage;
 
     [Reactive] private bool _isLoadingImage;
-    private InferenceService _inferenceService;
+    private DbService _dbService;
 
     public GalleryViewModel(ImageDbViewModel imageDbViewModel, 
         LlmViewModel llmViewModel,
-        InferenceService inferenceService)
+        DbService inferenceService)
     {
         ImageDbViewModel = imageDbViewModel ?? throw new ArgumentNullException(nameof(imageDbViewModel));
-        _inferenceService = inferenceService ?? throw new ArgumentNullException(nameof(inferenceService));
+        _dbService = inferenceService ?? throw new ArgumentNullException(nameof(inferenceService));
         LlmViewModel = llmViewModel ?? throw new ArgumentNullException(nameof(llmViewModel));
         
         ImageDbViewModel.WhenAnyValue(x => x.SelectedImage)
@@ -50,10 +49,11 @@ public partial class GalleryViewModel : ViewModelBase
         SelectedImage?.Dispose();
         var selected = ImageDbViewModel.FilteredImages[idx];
         
+        
         await Task.Run(async () =>
         {
-            var image = await selected.MetaData.FilePath.LoadImageFromPath(1300);
-            SelectedImage = new ImageItem(image, selected.MetaData);
+            var image = await selected.Photo.FilePath.LoadImageFromPath(1300);
+            SelectedImage = new ImageItem(image, selected.Photo);
         }, ct);
     }
 }

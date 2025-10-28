@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SquarePixel.Models.Entities;
 using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace SquarePixel.Models;
 
-public class ImageItem(Stream source, MetaData data): IDisposable
+public class ImageItem(Stream source, Photo data): IDisposable
 {
     public void Dispose()
     {
@@ -13,5 +15,5 @@ public class ImageItem(Stream source, MetaData data): IDisposable
     }
 
     public Bitmap BitmapThumbnail { get; } = new(source);
-    public MetaData MetaData { get; } = data;
+    public Photo Photo { get; } = data;
 }

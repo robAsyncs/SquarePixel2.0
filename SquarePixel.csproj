@@ -27,6 +27,8 @@
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
         <PackageReference Include="Material.Icons.Avalonia" Version="2.3.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+        <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
         <PackageReference Include="ReactiveUI" Version="20.1.63" />
         <PackageReference Include="ReactiveUI.SourceGenerators" Version="2.1.1">
           <PrivateAssets>all</PrivateAssets>
