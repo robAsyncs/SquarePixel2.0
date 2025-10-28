@@ -2,8 +2,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
-using Avalonia.ReactiveUI;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 using Splat;
 using SquarePixel.ViewModels;
 
@@ -23,7 +24,7 @@ public partial class ImageDbView : ReactiveUserControl<ImageDbViewModel>
         InitializeComponent();
         this.WhenActivated(disposable =>
         {
-            DataContext = Locator.Current.GetService<ImageDbViewModel>();
+            DataContext = App.Services.GetRequiredService<ImageDbViewModel>();
 
             ViewModel!.PickFileInteraction.
                 RegisterHandler(async interaction =>

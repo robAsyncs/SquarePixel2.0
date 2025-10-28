@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Reactive;
-using System.Reactive.Disposables;
+using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Controls.Notifications;
 using Avalonia.Platform.Storage;
 using DynamicData;
 using ReactiveUI;
@@ -25,7 +22,7 @@ namespace SquarePixel.ViewModels;
 
 public partial class ImageDbViewModel : ViewModelBase
 {
-    public SourceList<ImageItem> ImageCollection { get; } = new();
+    public ObservableCollection<ImageItem> ImageCollection { get; } = [];
     public ReadOnlyObservableCollection<ImageItem> FilteredImages => _filteredImages;
     private readonly ReadOnlyObservableCollection<ImageItem> _filteredImages;
     private ISukiDialogManager _dialogManager { get; }
@@ -51,27 +48,24 @@ public partial class ImageDbViewModel : ViewModelBase
         _settingService = settingService ?? throw new ArgumentNullException(nameof(settingService));
         _dbService = dbService ?? throw new ArgumentNullException(nameof(dbService));
 
-        ImageCollection.Connect()
-            .AutoRefreshOnObservable(x =>
-                this.WhenAnyValue(x => x.FilterByClassValue))
-            .Filter(x => x.Photo.Tags.Contains(ImageClasses[FilterByClassValue]))
-            .Bind(out _filteredImages)
-            .Subscribe();
+        // ImageCollection.Connect()
+        //     .AutoRefreshOnObservable(x =>
+        //         this.WhenAnyValue(x => x.FilterByClassValue))
+        //     .Filter(x => x.Photo.Tags.Contains(ImageClasses[FilterByClassValue]))
+        //     .Bind(out _filteredImages)
+        //     .Subscribe();
 
         this.WhenActivated(disposable =>
         {
             //todo: REPLACE with setting directory
-            LoadGalleryFolderCommand
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe()
-                .DisposeWith(disposable);
-
-            LoadGalleryFolderCommand.ThrownExceptions.Subscribe();
+            
+            Observable.StartAsync(async ct => await LoadGalleryAsync(ct));
+            LoadGalleryCommand.ThrownExceptions.Subscribe().DisposeWith(disposable);
         });
     }
 
     [ReactiveCommand]
-    private async Task LoadGalleryFolder(CancellationToken ct)
+    private async Task LoadGalleryAsync(CancellationToken ct)
     {
         ImageCollection.Clear();
         
@@ -85,18 +79,18 @@ public partial class ImageDbViewModel : ViewModelBase
 
     private async IAsyncEnumerable<ImageItem> LoadImagesAsync([EnumeratorCancellation] CancellationToken ct)
     {
-        var images = await _dbService.RetrieveImagesAsync();
+        var images = await _dbService.RetrieveImagesAsync(ct);
         foreach (var image in images)
         {
             //Load images from disk and captions from db, then 
-            var imageStream = await image.FilePath.LoadImageFromPath(desiredWidth: 350);
+            using var imageStream = await image.FilePath.LoadImageFromPath(desiredWidth: 350);
             
             foreach (var className in image.Tags)
                 if (!ImageClasses.Contains(className)) 
                     ImageClasses.Add(className);
             
             yield return new ImageItem(imageStream, image);
-            await imageStream.DisposeAsync();
+            // await imageStream.DisposeAsync();
         }
     }
     
@@ -106,11 +100,11 @@ public partial class ImageDbViewModel : ViewModelBase
             .Select(x => new Photo
         {
             Id = new Guid(),
-            FilePath = x.Path.AbsoluteUri,
-            UploadedAt = DateTime.Now,
+            FilePath = x.Path.LocalPath,
+            UploadedAt = DateTime.Now.ToUniversalTime(),
         }).ToArray();
             
-        await _dbService.SaveImageMetaAsync(photos, ct);
+        await _dbService.SaveUniqueImagesAsync(photos, ct);
         await _rabbitMqService.PublishImageAsync(photos, ct);
     }
 }

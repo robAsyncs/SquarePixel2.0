@@ -14,8 +14,6 @@
        
         <suki:BusyArea BorderBrush="Red" Grid.Row="0" Grid.Column="0" BusyText="Loading"
                        IsBusy="{Binding IsLoadingImage}">
-            
-                   
                <Panel Background="LightGray" >
                    <Image Source="{Binding SelectedImage.BitmapThumbnail}" 
                           VerticalAlignment="Center"

@@ -8,7 +8,6 @@ public class SquareDbContext: DbContext
         : base(options)
     {
     }
-
     
     public DbSet<Photo> Photos { get; set; } = default!;
     
@@ -18,9 +17,7 @@ public class SquareDbContext: DbContext
 
         modelBuilder.Entity<Photo>(entity =>
         {
-            entity.Property(p => p.FilePath)
-                .IsRequired()
-                .HasMaxLength(512);
+            entity.HasKey(x => x.Id);
             
             entity.Property(p => p.FilePath)
                 .IsRequired()
@@ -31,11 +28,9 @@ public class SquareDbContext: DbContext
                 .HasMaxLength(512);
             
             entity.Property(p => p.Caption)
-                .IsRequired()
                 .HasMaxLength(512);
             
             entity.Property(p => p.DeletionDate)
-                .IsRequired()
                 .HasMaxLength(512);
             
             entity.Property(p => p.Tags)

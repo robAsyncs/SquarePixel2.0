@@ -1,12 +1,12 @@
-using Akavache;
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SquarePixel.ViewModels;
 using SquarePixel.Views;
-using Splat;
 using SquarePixel.Models;
 using SquarePixel.Models.Entities;
 using SquarePixel.Services;
@@ -20,49 +20,47 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
+    
+    public static IServiceProvider Services { get; private set; } = default!;
+
+    private IHost? _host;
 
     public override void OnFrameworkInitializationCompleted()
     {
-        BlobCache.ApplicationName = "SquarePixel";
-        InitializeDependencies();
+        //BlobCache.ApplicationName = "SquarePixel";
+      
+        _host = new HostBuilder()
+            .ConfigureServices((context, services) =>
+            {
+                services.AddSingleton<App>();
+                services.AddSingleton<MainWindow>();
+                services.AddSingleton<MainWindowViewModel>();
+                
+                services.AddDbContextFactory<SquareDbContext>(options =>
+                    options.UseNpgsql("Host=localhost;Port=5432;Database=mydb;Username=postgres;Password=randompassword"));
+                
+                //todo: fix connection string
+                //postgresql://localhost:5432/mydb
+                
+                
+                services.AddSingleton<ISukiDialogManager, SukiDialogManager>();
+                services.AddSingleton<GalleryViewModel>();
+                services.AddSingleton<LlmViewModel>();
+                services.AddSingleton<ImageDbViewModel>();
+                services.AddSingleton<SettingViewModel>();
+                services.AddSingleton<RabbitMqService>();
+                services.AddSingleton<DbService>();
+                services.AddSingleton<SettingService<SquareSetting>, SettingService<SquareSetting>>();
+            }).Build();
+
+        Services = _host.Services;
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = Locator.Current.GetService<MainWindowViewModel>(),
-            };
+            desktop.MainWindow = _host.Services.GetRequiredService<MainWindow>();
         }
 
         base.OnFrameworkInitializationCompleted();
-    }
-    
-    private void InitializeDependencies()
-    
-    {   
-        var services = new ServiceCollection();
-        
-        services.AddDbContextFactory<SquareDbContext>(options =>
-            options.UseNpgsql("Data Source=photos.db"));
-        
-        var provider = services.BuildServiceProvider();
-        
-        Locator.CurrentMutable.RegisterConstant(
-            provider.GetRequiredService<IDbContextFactory<SquareDbContext>>(),
-            typeof(IDbContextFactory<SquareDbContext>)
-        );
-        
-        
-        SplatRegistrations.RegisterLazySingleton<ISukiDialogManager, SukiDialogManager>();
-        SplatRegistrations.RegisterLazySingleton<GalleryViewModel, GalleryViewModel>();
-        SplatRegistrations.RegisterLazySingleton<LlmViewModel, LlmViewModel>();
-        SplatRegistrations.RegisterLazySingleton<ImageDbViewModel, ImageDbViewModel>();
-        SplatRegistrations.RegisterLazySingleton<MainWindowViewModel, MainWindowViewModel>();
-        SplatRegistrations.RegisterLazySingleton<SettingViewModel, SettingViewModel>();
-        SplatRegistrations.RegisterLazySingleton<RabbitMqService, RabbitMqService>();
-        SplatRegistrations.RegisterLazySingleton<DbService, DbService>();
-        SplatRegistrations.RegisterLazySingleton<SettingService<SquareSetting>, SettingService<SquareSetting>>();
-
-
     }
 
 }

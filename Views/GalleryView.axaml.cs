@@ -1,5 +1,6 @@
-﻿using Avalonia.ReactiveUI;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
+using ReactiveUI.Avalonia;
 using Splat;
 using SquarePixel.ViewModels;
 
@@ -10,10 +11,8 @@ public partial class GalleryView : ReactiveUserControl<GalleryViewModel>
     public GalleryView()
     {
         InitializeComponent();
-        this.WhenActivated(disposable =>
-        {
-            DataContext = Locator.Current.GetService<GalleryViewModel>();
-        });
+        DataContext = App.Services.GetRequiredService<GalleryViewModel>();
+      
 
     }
 }

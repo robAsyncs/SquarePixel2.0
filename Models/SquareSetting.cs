@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SquarePixel.Models;
+﻿namespace SquarePixel.Models;
 
 public class SquareSetting
 {

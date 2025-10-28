@@ -1,4 +1,4 @@
-﻿using Avalonia.ReactiveUI;
+﻿using ReactiveUI.Avalonia;
 using SquarePixel.ViewModels;
 
 namespace SquarePixel.Views;
